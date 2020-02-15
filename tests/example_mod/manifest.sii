@@ -1,0 +1,12 @@
+SiiNunit {
+	mod_package : .mod {
+		display_name: "Example Mod"
+		package_version: "v1.0"
+		author: "rasmusolle"
+
+		category[]: "other"
+
+		icon: "icon.jpg"
+		description_file: "description.txt"
+	}
+}

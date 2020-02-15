@@ -1,0 +1,4 @@
+material : "ui" {
+	texture : "pic01.tobj"
+	texture_name : "texture"
+}

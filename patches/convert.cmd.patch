@@ -1,0 +1,8 @@
+--- convert_orig.cmd	2020-01-05 18:01:33.816341100 +0100
++++ convert.cmd	2020-01-05 18:00:55.478148300 +0100
+@@ -3,4 +3,4 @@
+ @rem can't use title argument of the new console because wine doesn't support it. 
+ @start /wait _convert.bat 
+ @popd 
+-@exit %ERRORLEVEL%
++@exit /b %ERRORLEVEL%
