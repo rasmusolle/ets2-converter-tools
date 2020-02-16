@@ -52,6 +52,8 @@ class Converter:
 			else:
 				file.write("%s" % self.getUid())
 
+	def runConversion(self):
+		subprocess.call(Path(self.convtool.getConvPath() + "/convert.cmd"))
 
 def main():
 	convtool = ConversionTools(Game.ETS2, 36)
@@ -60,6 +62,7 @@ def main():
 		Path(convert.options['directory']),
 		Path(convtool.getConvPath() + "/%s/" % convert.getUid()))
 	convert.ensureMount()
+	convert.runConversion()
 
 
 if __name__ == "__main__":
