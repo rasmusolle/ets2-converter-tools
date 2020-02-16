@@ -1,10 +1,11 @@
-from enum import Enum
-from conversiontools import ConversionTools
-from pathlib import Path
+import hashlib
 import os
 import subprocess
 import sys
-import hashlib
+import zipfile
+from enum import Enum
+from pathlib import Path
+from conversiontools import ConversionTools
 
 class Compression(Enum):
 	"""Enums for what compression the mod should be packed with.
@@ -21,7 +22,7 @@ class Game(Enum):
 class Converter:
 	def __init__(self, argConvtool, argOptions = None):
 		self.options = {
-			"modname": "My mod!",
+			"modname": "mymod",
 			"compression": Compression.FOLDER,
 			"game": Game.ETS2,
 			"gameversion": 36,
@@ -45,7 +46,7 @@ class Converter:
 
 	def ensureMount(self):
 		"""Ensure that the symlink name in /extra_mount.txt exists"""
-		with open(Path(self.convtool.getConvPath() + "/extra_mount.txt"), "a") as file:
+		with open(Path(self.convtool.getConvPath() + "/extra_mount.txt"), "r+") as file:
 			for line in file:
 				if self.getUid() in line:
 					break
