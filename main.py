@@ -7,6 +7,13 @@ from enum import Enum
 from pathlib import Path
 from conversiontools import ConversionTools
 
+def addDirToZip(zipHandle, path):
+	for root, dirs, files in os.walk(path):
+		for file in files:
+			filePath = os.path.join(root, file)
+			inZipPath = filePath.replace(path, "", 1).lstrip("\\/")
+			zipHandle.write(filePath, inZipPath)
+
 class Compression(Enum):
 	"""Enums for what compression the mod should be packed with.
 	FOLDER means that the mod is not packed as an archive file, but be stored unpacked inside of a folder."""
@@ -54,7 +61,12 @@ class Converter:
 				file.write("%s" % self.getUid())
 
 	def runConversion(self):
-		subprocess.call(Path(self.convtool.getConvPath() + "/convert.cmd"))
+		subprocess.call(str(Path(self.convtool.getConvPath() + "/convert.cmd")))
+
+	def packMod(self):
+		zipf = zipfile.ZipFile(Path(os.path.expanduser("~") + "/Documents/Euro Truck Simulator 2/mod/%s.zip" % self.options['modname']), "w", zipfile.ZIP_DEFLATED)
+		addDirToZip(zipf, str(Path(self.convtool.getConvPath() + "/rsrc/" + self.getUid() + "/@cache/")))
+		zipf.close()
 
 def main():
 	convtool = ConversionTools(Game.ETS2, 36)
@@ -64,6 +76,7 @@ def main():
 		Path(convtool.getConvPath() + "/%s/" % convert.getUid()))
 	convert.ensureMount()
 	convert.runConversion()
+	convert.packMod()
 
 
 if __name__ == "__main__":
