@@ -27,7 +27,7 @@ class Game(Enum):
 	ATS = 1
 
 class Converter:
-	def __init__(self, argConvtool, argOptions = None):
+	def __init__(self, argOptions = None):
 		self.options = {
 			"modname": "mymod",
 			"compression": Compression.FOLDER,
@@ -36,7 +36,7 @@ class Converter:
 			"directory": "tests/example_mod/",
 			"staticdirectory": None
 		}
-		self.convtool = argConvtool
+		self.tool = ConversionTools(self.options['game'], self.options['gameversion'])
 
 	def getUid(self):
 		return "ct_" + hashlib.md5(self.options['modname'].encode("UTF-8")).hexdigest()
@@ -53,7 +53,7 @@ class Converter:
 
 	def ensureMount(self):
 		"""Ensure that the symlink name in /extra_mount.txt exists"""
-		with open(Path(self.convtool.getConvPath() + "/extra_mount.txt"), "r+") as file:
+		with open(Path(self.tool.getConvPath() + "/extra_mount.txt"), "r+") as file:
 			for line in file:
 				if self.getUid() in line:
 					break
@@ -61,19 +61,18 @@ class Converter:
 				file.write("%s" % self.getUid())
 
 	def runConversion(self):
-		subprocess.call(str(Path(self.convtool.getConvPath() + "/convert.cmd")))
+		subprocess.call(str(Path(self.tool.getConvPath() + "/convert.cmd")))
 
 	def packMod(self):
 		zipf = zipfile.ZipFile(Path(os.path.expanduser("~") + "/Documents/Euro Truck Simulator 2/mod/%s.zip" % self.options['modname']), "w", zipfile.ZIP_DEFLATED)
-		addDirToZip(zipf, str(Path(self.convtool.getConvPath() + "/rsrc/" + self.getUid() + "/@cache/")))
+		addDirToZip(zipf, str(Path(self.tool.getConvPath() + "/rsrc/" + self.getUid() + "/@cache/")))
 		zipf.close()
 
 def main():
-	convtool = ConversionTools(Game.ETS2, 36)
-	convert = Converter(convtool)
+	convert = Converter()
 	Converter.createSymlink(
 		Path(convert.options['directory']),
-		Path(convtool.getConvPath() + "/%s/" % convert.getUid()))
+		Path(convert.tool.getConvPath() + "/%s/" % convert.getUid()))
 	convert.ensureMount()
 	convert.runConversion()
 	convert.packMod()
