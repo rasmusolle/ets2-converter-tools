@@ -9,9 +9,12 @@ class ConvStatus(Enum):
 
 class ConversionTools:
 	"""This class makes sure that the wanted version conversion tools are downloaded and initialized"""
-	def __init__(self, game, version):
+	def __init__(self, game, version, convver = None):
 		self.game = game
-		self.version = self._gameVerToConvVer(version)
+		if convver:
+			self.version = convver
+		else:
+			self.version = self._gameVerToConvVer(version)
 		self.versionStr = self._convVerToString(".")
 		self.status = self._checkConv()
 		if not self.status == ConvStatus.CONV_VERSION_FOUND:

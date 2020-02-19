@@ -33,10 +33,11 @@ class Converter:
 			"compression": Compression.FOLDER,
 			"game": Game.ETS2,
 			"gameversion": 36,
+			"converterversion": [2, 0],
 			"directory": "tests/example_mod/",
 			"staticdirectory": None
 		}
-		self.tool = ConversionTools(self.options['game'], self.options['gameversion'])
+		self.tool = ConversionTools(self.options['game'], self.options['gameversion'], self.options['converterversion'])
 
 	def getUid(self):
 		return "ct_" + hashlib.md5(self.options['modname'].encode("UTF-8")).hexdigest()
